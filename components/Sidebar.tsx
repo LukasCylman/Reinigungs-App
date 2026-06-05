@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard, ClipboardList, Users, FileText,
-  CheckSquare, Download, TrendingUp, Sparkles
+  CheckSquare, Download, TrendingUp, Sparkles, LogOut
 } from "lucide-react";
 
 const nav = [
@@ -18,6 +18,12 @@ const nav = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const logout = async () => {
+    await fetch("/api/auth", { method: "DELETE" });
+    router.push("/login");
+  };
   return (
     <aside className="w-60 bg-blue-900 text-white flex flex-col shrink-0">
       <div className="p-5 border-b border-blue-800">
@@ -45,8 +51,11 @@ export default function Sidebar() {
           );
         })}
       </nav>
-      <div className="p-4 border-t border-blue-800 text-xs text-blue-400">
-        Version 1.0 · Kostenlos
+      <div className="p-3 border-t border-blue-800">
+        <button onClick={logout} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-blue-200 hover:bg-blue-800 hover:text-white w-full transition-colors">
+          <LogOut className="w-4 h-4 shrink-0" /> Ausloggen
+        </button>
+        <p className="text-xs text-blue-500 px-3 mt-2">Version 1.0 · Kostenlos</p>
       </div>
     </aside>
   );
