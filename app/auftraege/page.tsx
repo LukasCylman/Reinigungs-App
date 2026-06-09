@@ -69,7 +69,8 @@ export default function AuftraegePage() {
         ))}
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      {/* Desktop Tabelle */}
+      <div className="hidden md:block bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
@@ -103,6 +104,36 @@ export default function AuftraegePage() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Karten */}
+      <div className="md:hidden space-y-3">
+        {filtered.length === 0 && <div className="bg-white rounded-xl p-6 text-center text-gray-400 border border-gray-100">Keine Aufträge gefunden</div>}
+        {filtered.map(a => (
+          <div key={a.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div className="flex items-start justify-between mb-2">
+              <div>
+                <p className="font-semibold text-gray-900">{a.kundenname}</p>
+                <p className="text-sm text-gray-500">{a.objektname || "Kein Objekt"}</p>
+              </div>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${STATUS_COLOR[a.status] || ""}`}>{a.status}</span>
+            </div>
+            <div className="flex gap-4 text-sm text-gray-600 mb-3">
+              <span>📅 {new Date(a.datum).toLocaleDateString("de-DE")}</span>
+              <span>🕐 {a.uhrzeit_von} – {a.uhrzeit_bis}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-gray-500">
+                {a.mitarbeiter && <span>👤 {a.mitarbeiter}</span>}
+                {a.preis ? <span className="ml-3 font-semibold text-gray-900">{Number(a.preis).toFixed(2)} €</span> : null}
+              </div>
+              <div className="flex gap-3">
+                <button onClick={() => { setForm(a); setModal(true); }} className="text-blue-600"><Pencil className="w-4 h-4" /></button>
+                <button onClick={() => del(a.id)} className="text-red-500"><Trash2 className="w-4 h-4" /></button>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
       {modal && (

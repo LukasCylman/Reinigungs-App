@@ -53,7 +53,8 @@ export default function RechnungenPage() {
         </button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      {/* Desktop Tabelle */}
+      <div className="hidden md:block bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
@@ -86,6 +87,36 @@ export default function RechnungenPage() {
             })}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Karten */}
+      <div className="md:hidden space-y-3">
+        {rechnungen.length === 0 && <div className="bg-white rounded-xl p-6 text-center text-gray-400 border border-gray-100">Keine Rechnungen vorhanden</div>}
+        {rechnungen.map(r => (
+          <div key={r.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div className="flex items-start justify-between mb-2">
+              <div>
+                <p className="font-semibold text-gray-900">{r.kundenname}</p>
+                <p className="text-xs text-gray-400 font-mono">{r.rechnungsnummer}</p>
+              </div>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${STATUS_COLOR[r.status] || ""}`}>{r.status}</span>
+            </div>
+            <div className="flex items-center justify-between mt-3">
+              <div className="text-sm text-gray-500 space-y-0.5">
+                <p>📅 {new Date(r.rechnungsdatum).toLocaleDateString("de-DE")}</p>
+                {r.faellig_am && <p>⏰ Fällig: {new Date(r.faellig_am).toLocaleDateString("de-DE")}</p>}
+              </div>
+              <div className="text-right">
+                <p className="text-lg font-bold text-gray-900">{Number(r.betrag).toFixed(2)} €</p>
+                <p className="text-xs text-gray-400">inkl. {r.mwst_prozent}% MwSt</p>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 mt-3 pt-3 border-t border-gray-50">
+              <button onClick={() => { setForm(r); setModal(true); }} className="text-blue-600"><Pencil className="w-4 h-4" /></button>
+              <button onClick={() => del(r.id)} className="text-red-500"><Trash2 className="w-4 h-4" /></button>
+            </div>
+          </div>
+        ))}
       </div>
 
       {modal && (
